@@ -8,8 +8,8 @@
 # In[16]:
 
 
-logname = 'logfile_2080ti'
-gpu = '0,1'
+logname = 'logfile_2080ti_1'
+gpu = '0'
 max_template_date = '2021-07-15'
 
 
@@ -19,7 +19,7 @@ max_template_date = '2021-07-15'
 
 
 path_input = '/home/yyang18/project/alphafold_test/fasta/'
-path_output = '/home/yyang18/project/alphafold_test/out/'
+path_output = '/home/yyang18/project/alphafold_test/out_1/'
 alphafold = '/home/yyang18/software/alphafold/docker/run_docker.py'
 
 
@@ -61,8 +61,8 @@ files = os.listdir(path_input)
 
 logging.info("alphafold start!")
 for file in files:
-    alphafold = 'python'+' '+alphafold+' '                '--fasta_paths'+' '+path_input+file+' '+                '--max_template_date='+max_template_date+' '+                '--gpu_devices'+' '+gpu+' '+                '--output_path='+path_output+' '+                '>'+' '+path_output+file.replace('.fasta','')+'.log'+' '+'2>&1'
-    process = subprocess.Popen(alphafold,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+    alphafold_run = 'python'+' '+alphafold+' '                '--fasta_paths'+' '+path_input+file+' '+                '--max_template_date='+max_template_date+' '+                '--gpu_devices'+' '+gpu+' '+                '--output_path='+path_output+' '+                '>'+' '+path_output+file.replace('.fasta','')+'.log'+' '+'2>&1'
+    process = subprocess.Popen(alphafold_run,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
     process.communicate()
     logging.info(file+" is done!")
 
