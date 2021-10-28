@@ -8,8 +8,8 @@
 # In[16]:
 
 
-logname = 'logfile_2080ti_1'
-gpu = '0'
+logname = 'logfile_2080ti'
+gpu = '8'
 max_template_date = '2021-07-15'
 
 
@@ -18,8 +18,9 @@ max_template_date = '2021-07-15'
 # In[17]:
 
 
-path_input = '/home/yyang18/project/alphafold_test/fasta/'
-path_output = '/home/yyang18/project/alphafold_test/out_1/'
+path_input = '/home/yyang18/pipeline/alphafold/fasta/'
+path_output = '/home/yyang18/pipeline/alphafold/out/'
+path_log = '/home/yyang18/pipeline/alphafold/log/'
 alphafold = '/home/yyang18/software/alphafold/docker/run_docker.py'
 
 
@@ -31,24 +32,15 @@ import os
 import logging
 
 
-# step1: create the output directory of alphafold
+# step1: create the directory of log files and output
 
 # In[19]:
 
 
-try:
-    os.mkdir(path_output)
-    logging.basicConfig(level=logging.DEBUG, 
-                        filename=logname, 
-                        filemode="a",
-                        format="%(asctime)-15s %(levelname)-8s %(message)s")
-    logger = logging.getLogger(__name__)
-    logger.info("create the output directory of alphafold: "+path_output)
-except:
-    logging.info("File exists: "+path_output)
+os.mkdir(path_log)
+os.mkdir(path_output)
 
-
-# setp2: run alphafold
+# setp1: run alphafold
 
 # In[20]:
 
@@ -57,11 +49,14 @@ files = os.listdir(path_input)
 
 
 # In[21]:
-
-
+logging.basicConfig(level=logging.DEBUG, 
+                        filename=logname, 
+                        filemode="a",
+                        format="%(asctime)-15s %(levelname)-8s %(message)s")
+logger = logging.getLogger(__name__)
 logging.info("alphafold start!")
 for file in files:
-    alphafold_run = 'python'+' '+alphafold+' '                '--fasta_paths'+' '+path_input+file+' '+                '--max_template_date='+max_template_date+' '+                '--gpu_devices'+' '+gpu+' '+                '--output_path='+path_output+' '+                '>'+' '+path_output+file.replace('.fasta','')+'.log'+' '+'2>&1'
+    alphafold_run = 'python'+' '+alphafold+' '                '--fasta_paths'+' '+path_input+file+' '+                '--max_template_date='+max_template_date+' '+                '--gpu_devices'+' '+gpu+' '+                '--output_path='+path_output+' '+                '>'+' '+path_log+file.replace('.fasta','')+'.log'+' '+'2>&1'
     process = subprocess.Popen(alphafold_run,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
     process.communicate()
     logging.info(file+" is done!")
